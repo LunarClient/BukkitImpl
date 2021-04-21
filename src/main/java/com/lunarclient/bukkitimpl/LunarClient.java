@@ -3,6 +3,7 @@ package com.lunarclient.bukkitimpl;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lunarclient.bukkitapi.LunarClientAPI;
+import com.lunarclient.bukkitapi.nethandler.shared.LCPacketWaypointAdd;
 import com.lunarclient.bukkitapi.nethandler.client.LCPacketModSettings;
 import com.lunarclient.bukkitapi.nethandler.client.obj.ModSettings;
 import com.lunarclient.bukkitapi.nethandler.client.obj.ServerRule;
@@ -30,6 +31,9 @@ public class LunarClient extends JavaPlugin {
     //  waypoint's without creating tons of objects
     @Getter
     private final List<LCWaypoint> waypoints = new ArrayList<>();
+    
+    @Getter
+    private final List<LCPacketWaypointAdd> waypointPackets = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -61,7 +65,10 @@ public class LunarClient extends JavaPlugin {
                 JsonObject object = new JsonParser().parse(String.valueOf(entry.getValue())).getAsJsonObject();
 
                 LCWaypoint waypoint = new LCWaypoint((String) object.get("name").getAsString(), (Integer) object.get("x").getAsInt(), (Integer) object.get("y").getAsInt(), (Integer) object.get("z").getAsInt(), (String)  LunarClientAPI.getInstance().getWorldIdentifier(Bukkit.getWorld(object.get("world").getAsString())), (Integer) object.get("color").getAsInt(), (Boolean) object.get("forced").getAsBoolean(), (Boolean) object.get("visible").getAsBoolean());
+                LCPacketWaypointAdd packet = new LCPacketWaypointAdd(waypoint.getName(), waypoint.getWorld(), waypoint.getColor(), waypoint.getX(), waypoint.getY(), waypoint.getZ(), waypoint.isForced(), waypoint.isVisible());
+                
                 waypoints.add(waypoint);
+                waypointPackets.add(packet); // cache the packet to be used later
             }
         }
     }
