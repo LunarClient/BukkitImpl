@@ -26,12 +26,6 @@ public class LunarClient extends JavaPlugin {
     @Getter
     private LCPacketModSettings packetModSettings = null;
     
-    // TODO: We can acctually cache the packet to 
-    //  send allowing easier implemntation of the
-    //  waypoint's without creating tons of objects
-    @Getter
-    private final List<LCWaypoint> waypoints = new ArrayList<>();
-    
     @Getter
     private final List<LCPacketWaypointAdd> waypointPackets = new ArrayList<>();
 
@@ -49,7 +43,6 @@ public class LunarClient extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new LunarClientUserListener(this), this);
     }
 
-    // TODO: Better loading implementation?
     public void loadWaypoints() {
         // if we don't have waypoints, don't continue.
         if (!getConfig().contains("waypoints")) {
@@ -59,7 +52,7 @@ public class LunarClient extends JavaPlugin {
         // Get all the list of waypoints
         List<Map<?, ?>> maps = getConfig().getMapList("waypoints");
         for (Map<?, ?> map : maps) {
-            // Create the waypoint.
+            // Create the waypoint & waypoint packet.
             // This is super brittle, and could be done better most likely.
             for (Map.Entry<?, ?> entry : map.entrySet()) {
                 JsonObject object = new JsonParser().parse(String.valueOf(entry.getValue())).getAsJsonObject();
@@ -67,8 +60,10 @@ public class LunarClient extends JavaPlugin {
                 LCWaypoint waypoint = new LCWaypoint((String) object.get("name").getAsString(), (Integer) object.get("x").getAsInt(), (Integer) object.get("y").getAsInt(), (Integer) object.get("z").getAsInt(), (String)  LunarClientAPI.getInstance().getWorldIdentifier(Bukkit.getWorld(object.get("world").getAsString())), (Integer) object.get("color").getAsInt(), (Boolean) object.get("forced").getAsBoolean(), (Boolean) object.get("visible").getAsBoolean());
                 LCPacketWaypointAdd packet = new LCPacketWaypointAdd(waypoint.getName(), waypoint.getWorld(), waypoint.getColor(), waypoint.getX(), waypoint.getY(), waypoint.getZ(), waypoint.isForced(), waypoint.isVisible());
                 
-                waypoints.add(waypoint);
-                waypointPackets.add(packet); // cache the packet to be used later
+                // Here we cache the packet to be used when someone joins,
+                // before we used the api to send the "Waypoint" but that
+                // was creating more packets/objects then needed.
+                waypointPackets.add(packet);
             }
         }
     }
