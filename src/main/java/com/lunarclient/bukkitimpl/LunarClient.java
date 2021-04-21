@@ -24,6 +24,10 @@ public class LunarClient extends JavaPlugin {
     private static LunarClient instance;
     @Getter
     private LCPacketModSettings packetModSettings = null;
+    
+    // TODO: We can acctually cache the packet to 
+    //  send allowing easier implemntation of the
+    //  waypoint's without creating tons of objects
     @Getter
     private final List<LCWaypoint> waypoints = new ArrayList<>();
 
