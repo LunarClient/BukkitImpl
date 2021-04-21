@@ -41,6 +41,7 @@ public class LunarClient extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new LunarClientUserListener(this), this);
     }
 
+    // TODO: Better loading implementation?
     public void loadWaypoints() {
         // if we don't have waypoints, don't continue.
         if (!getConfig().contains("waypoints")) {
