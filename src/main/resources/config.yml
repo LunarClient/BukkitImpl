@@ -3,7 +3,7 @@
 # These are a list of server IDs that are forcefully disabled on this server.
 # Just add one of the corresponding mod IDS to this list.
 
-# Mod Ids: (Last Updated: 02/04/2021)
+# Mod Ids: (Last Updated: 05/05/2021)
 # one_seven_visuals - 1.7 Visuals
 # fps - FPS
 # cps - CPS
@@ -46,6 +46,8 @@
 # mumble-link - Mumble Link
 # bossbar - Boss Bar
 # freelook - Freelook
+# replaymod - ReplayMod
+# nickHider - NickHider
 force-disabled-mods:
   - "skyblockAddons" # Lets disable SkyBlockAddons mod for example.
 
