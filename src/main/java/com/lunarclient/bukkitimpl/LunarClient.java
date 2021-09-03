@@ -27,6 +27,8 @@ public class LunarClient extends JavaPlugin {
     @Getter
     private final List<LCWaypoint> waypoints = new ArrayList<>();
 
+    private final JsonParser jsonParser = new JsonParser();
+
     @Override
     public void onEnable() {
         saveDefaultConfig();
@@ -53,7 +55,7 @@ public class LunarClient extends JavaPlugin {
             // Create the waypoint.
             // This is super brittle, and could be done better most likely.
             for (Map.Entry<?, ?> entry : map.entrySet()) {
-                JsonObject object = new JsonParser().parse(String.valueOf(entry.getValue())).getAsJsonObject();
+                JsonObject object = this.jsonParser.parse(String.valueOf(entry.getValue())).getAsJsonObject();
 
                 LCWaypoint waypoint = new LCWaypoint((String) object.get("name").getAsString(), (Integer) object.get("x").getAsInt(), (Integer) object.get("y").getAsInt(), (Integer) object.get("z").getAsInt(), (String)  LunarClientAPI.getInstance().getWorldIdentifier(Bukkit.getWorld(object.get("world").getAsString())), (Integer) object.get("color").getAsInt(), (Boolean) object.get("forced").getAsBoolean(), (Boolean) object.get("visible").getAsBoolean());
                 waypoints.add(waypoint);
